@@ -28,3 +28,21 @@ DATA = {
 #     'ингредиент2': количество2,
 #   }
 # }
+
+def main(request):
+    recipes = list(DATA.keys())
+    context = {
+        'recipes': recipes
+    }
+    return render(request, 'main/index.html', context)
+
+def calculator(request):
+    recipe = DATA.get(request.path.replace('/', ''))
+    servings = request.GET.get('servings', 1)
+    for key, value in recipe.items():
+        recipe[key] = value * int(servings)
+    context = {
+        'recipe': recipe,
+        'servings': servings
+    }
+    return render(request, 'calculator/index.html', context)
