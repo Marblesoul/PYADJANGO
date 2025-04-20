@@ -6,13 +6,15 @@ from .models import Article, Tag, Scope
 
 class ScopeInlineFormset(BaseInlineFormSet):
     def clean(self):
-        main_count = 1
+        main_count = 0
         for form in self.forms:
             if form.cleaned_data.get('is_main'):
                 main_count += 1
         if main_count > 1:
             raise ValidationError('Основной тег может быть только один')
         super().clean()
+        if main_count != 1:
+            raise ValidationError('Основной тег должен быть указан')
 
 
 class ScopeInline(admin.TabularInline):
